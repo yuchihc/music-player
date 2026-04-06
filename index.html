@@ -289,26 +289,26 @@
     <audio id="audio"></audio>
     
     <script>
-        // 歌曲清單（檔名需與實際 MP3 檔名一致）
+        // 歌曲清單（檔名需與實際 M4A 檔名一致）
         const songs = [
-            '曲目1.mp3',
-            '曲目2.mp3',
-            '曲目3.mp3',
-            '曲目4.mp3',
-            '曲目5.mp3',
-            '曲目6.mp3',
-            '曲目7.mp3',
-            '曲目8.mp3',
-            '曲目9.mp3',
-            '曲目10.mp3',
-            '曲目11.mp3',
-            '曲目12.mp3',
-            '曲目13.mp3',
-            '曲目14.mp3',
-            '曲目15.mp3',
-            '曲目16.mp3',
-            '曲目17.mp3',
-            '曲目18.mp3'
+            '曲目1.m4a',
+            '曲目2.m4a',
+            '曲目3.m4a',
+            '曲目4.m4a',
+            '曲目5.m4a',
+            '曲目6.m4a',
+            '曲目7.m4a',
+            '曲目8.m4a',
+            '曲目9.m4a',
+            '曲目10.m4a',
+            '曲目11.m4a',
+            '曲目12.m4a',
+            '曲目13.m4a',
+            '曲目14.m4a',
+            '曲目15.m4a',
+            '曲目16.m4a',
+            '曲目17.m4a',
+            '曲目18.m4a'
         ];
         
         let currentSongIndex = 0;
@@ -332,7 +332,7 @@
         function loadSong(index) {
             currentSongIndex = index;
             audio.src = songs[index];
-            const songName = songs[index].replace('.mp3', '');
+            const songName = songs[index].replace('.m4a', '');
             currentSongTitle.textContent = songName;
             currentSongInfo.textContent = `第 ${index + 1} 首 / 共 ${songs.length} 首`;
             updatePlaylist();
@@ -404,7 +404,7 @@
         // 建立播放清單
         function createPlaylist() {
             songs.forEach((song, index) => {
-                const songName = song.replace('.mp3', '');
+                const songName = song.replace('.m4a', '');
                 const playlistItem = document.createElement('div');
                 playlistItem.classList.add('playlist-item');
                 playlistItem.innerHTML = `
