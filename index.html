@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>世界名曲</title>
+    <title>音樂播放器</title>
     <style>
         * {
             margin: 0;
@@ -289,26 +289,33 @@
     <audio id="audio"></audio>
     
     <script>
-        // 歌曲清單（檔名需與實際 M4A 檔名一致）
+        // 歌曲清單
+        // 格式：{ name: '顯示名稱', url: 'Google Drive 直接下載連結' }
+        // 
+        // 如何取得 Google Drive 直接下載連結：
+        // 1. 取得分享連結，例如：https://drive.google.com/file/d/1ABC123xyz/view?usp=sharing
+        // 2. 提取「檔案ID」（1ABC123xyz 這部分）
+        // 3. 改成這個格式：https://drive.google.com/uc?export=download&id=1ABC123xyz
+        //
         const songs = [
-            '曲目1.m4a',
-            '曲目2.m4a',
-            '曲目3.m4a',
-            '曲目4.m4a',
-            '曲目5.m4a',
-            '曲目6.m4a',
-            '曲目7.m4a',
-            '曲目8.m4a',
-            '曲目9.m4a',
-            //'曲目10.m4a',
-            //'曲目11.m4a',
-            //'曲目12.m4a',
-            //'曲目13.m4a',
-            //'曲目14.m4a',
-            //'曲目15.m4a',
-            //'曲目16.m4a',
-            //'曲目17.m4a',
-            //'曲目18.m4a'
+            { name: '曲目1', url: 'https://drive.google.com/uc?export=download&id=18idq1ewLgiB1Ex54iRX2KxtWkads4_Yo' },
+            { name: '曲目2', url: 'https://drive.google.com/uc?export=download&id=10C_XyjoRd9x5pHNb5qtvtn1_AsVKkbpX' },
+            { name: '曲目3', url: 'https://drive.google.com/uc?export=download&id=在此填入檔案ID' },
+            { name: '曲目4', url: 'https://drive.google.com/uc?export=download&id=在此填入檔案ID' },
+            { name: '曲目5', url: 'https://drive.google.com/uc?export=download&id=在此填入檔案ID' },
+            { name: '曲目6', url: 'https://drive.google.com/uc?export=download&id=在此填入檔案ID' },
+            { name: '曲目7', url: 'https://drive.google.com/uc?export=download&id=在此填入檔案ID' },
+            { name: '曲目8', url: 'https://drive.google.com/uc?export=download&id=在此填入檔案ID' },
+            { name: '曲目9', url: 'https://drive.google.com/uc?export=download&id=在此填入檔案ID' },
+            { name: '曲目10', url: 'https://drive.google.com/uc?export=download&id=在此填入檔案ID' },
+            { name: '曲目11', url: 'https://drive.google.com/uc?export=download&id=在此填入檔案ID' },
+            { name: '曲目12', url: 'https://drive.google.com/uc?export=download&id=在此填入檔案ID' },
+            { name: '曲目13', url: 'https://drive.google.com/uc?export=download&id=在此填入檔案ID' },
+            { name: '曲目14', url: 'https://drive.google.com/uc?export=download&id=在此填入檔案ID' },
+            { name: '曲目15', url: 'https://drive.google.com/uc?export=download&id=在此填入檔案ID' },
+            { name: '曲目16', url: 'https://drive.google.com/uc?export=download&id=在此填入檔案ID' },
+            { name: '曲目17', url: 'https://drive.google.com/uc?export=download&id=在此填入檔案ID' },
+            { name: '曲目18', url: 'https://drive.google.com/uc?export=download&id=在此填入檔案ID' }
         ];
         
         let currentSongIndex = 0;
@@ -331,9 +338,8 @@
         // 載入歌曲
         function loadSong(index) {
             currentSongIndex = index;
-            audio.src = songs[index];
-            const songName = songs[index].replace('.m4a', '');
-            currentSongTitle.textContent = songName;
+            audio.src = songs[index].url;
+            currentSongTitle.textContent = songs[index].name;
             currentSongInfo.textContent = `第 ${index + 1} 首 / 共 ${songs.length} 首`;
             updatePlaylist();
         }
@@ -404,12 +410,11 @@
         // 建立播放清單
         function createPlaylist() {
             songs.forEach((song, index) => {
-                const songName = song.replace('.m4a', '');
                 const playlistItem = document.createElement('div');
                 playlistItem.classList.add('playlist-item');
                 playlistItem.innerHTML = `
                     <span class="playlist-item-number">${index + 1}</span>
-                    <span>${songName}</span>
+                    <span>${song.name}</span>
                 `;
                 playlistItem.addEventListener('click', () => {
                     loadSong(index);
@@ -443,6 +448,27 @@
         // 初始化
         createPlaylist();
         loadSong(0);
+        
+        // 自動播放（需要用戶互動後才能啟動，所以加入延遲嘗試）
+        // 某些瀏覽器需要用戶點擊才能播放，如果自動播放失敗會靜音嘗試
+        setTimeout(() => {
+            audio.play().then(() => {
+                playPauseBtn.textContent = '⏸️';
+            }).catch(err => {
+                // 如果自動播放被阻擋，嘗試靜音播放
+                console.log('自動播放被阻擋，嘗試靜音播放');
+                audio.muted = true;
+                audio.play().then(() => {
+                    playPauseBtn.textContent = '⏸️';
+                    // 播放後恢復音量
+                    setTimeout(() => {
+                        audio.muted = false;
+                    }, 1000);
+                }).catch(err2 => {
+                    console.log('無法自動播放，需要用戶點擊播放按鈕');
+                });
+            });
+        }, 500);
     </script>
 </body>
 </html>
